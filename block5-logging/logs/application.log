@@ -1,10 +1,2 @@
-2024-02-01T08:56:48.089+01:00  WARN 22276 --- [main] com.bosonit.block5logging.SomeLogs       : Este es un mensaje de advertencia
-2024-02-01T08:56:48.097+01:00 ERROR 22276 --- [main] com.bosonit.block5logging.SomeLogs       : Este es un mensaje de error
-2024-02-01T08:58:02.555+01:00  WARN 19264 --- [main] com.bosonit.block5logging.SomeLogs       : Este es un mensaje de advertencia
-2024-02-01T08:58:02.556+01:00 ERROR 19264 --- [main] com.bosonit.block5logging.SomeLogs       : Este es un mensaje de error
-2024-02-01T09:03:34.511+01:00  WARN 12248 --- [main] com.bosonit.block5logging.SomeLogs       : Este es un mensaje de advertencia
-2024-02-01T09:03:34.514+01:00 ERROR 12248 --- [main] com.bosonit.block5logging.SomeLogs       : Este es un mensaje de error
-2024-02-01T09:24:07.673+01:00  WARN 18680 --- [main] com.bosonit.block5logging.SomeLogs       : Este es un mensaje de advertencia
-2024-02-01T09:24:07.674+01:00 ERROR 18680 --- [main] com.bosonit.block5logging.SomeLogs       : Este es un mensaje de error
-2024-02-01T09:41:28.875+01:00  WARN 10588 --- [main] com.bosonit.block5logging.SomeLogs       : Este es un mensaje de advertencia
-2024-02-01T09:41:28.876+01:00 ERROR 10588 --- [main] com.bosonit.block5logging.SomeLogs       : Este es un mensaje de error
+2024-02-01T10:43:44.150+01:00  WARN 1968 --- [main] com.bosonit.block5logging.SomeLogs       : Este es un mensaje de advertencia
+2024-02-01T10:43:44.152+01:00 ERROR 1968 --- [main] com.bosonit.block5logging.SomeLogs       : Este es un mensaje de error
