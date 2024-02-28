@@ -1,9 +1,5 @@
-package com.bosonit.block7crudvalidation.controlles.dto;
+package com.bosonit.block7crudvalidation.controlles.dto.persona;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,11 +9,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersonaOutputDto {
-
-    private int id;
-
+    private String id_persona;
     private String usuario;
-
     private String name;
     private String surname;
     private String companyEmail;

@@ -1,18 +1,20 @@
 package com.bosonit.block7crudvalidation.models;
 
-import com.bosonit.block7crudvalidation.controlles.dto.PersonaInputDto;
-import com.bosonit.block7crudvalidation.controlles.dto.PersonaOutputDto;
+import com.bosonit.block7crudvalidation.controlles.dto.persona.PersonaInputDto;
+import com.bosonit.block7crudvalidation.controlles.dto.persona.PersonaOutputDto;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "PERSONA")
 public class Persona {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id_persona;
     @Column(nullable = false,length = 10)
     private String usuario;
     private String password;
@@ -25,9 +27,10 @@ public class Persona {
     private Date createdDate;
     private String imageUrl;
     private Date terminationDate;
+    private boolean esProfesor;
 
    public Persona (PersonaInputDto personaInputDto){
-         this.id = personaInputDto.getId();
+         this.id_persona = String.valueOf(personaInputDto.getId_persona());
         this.usuario = personaInputDto.getUsuario();
         this.password = personaInputDto.getPassword();
         this.name = personaInputDto.getName();
@@ -42,7 +45,7 @@ public class Persona {
     }
     public PersonaOutputDto personatoPersonaOutputDto(){
         return new PersonaOutputDto(
-                this.id,
+                this.id_persona,
                 this.usuario,
                 this.name,
                 this.surname,
@@ -54,5 +57,13 @@ public class Persona {
                 this.imageUrl,
                 this.terminationDate
         );
+    }
+
+    public String getId() {
+        return id_persona;
+    }
+
+    public String getIdPersona() {
+        return id_persona;
     }
 }

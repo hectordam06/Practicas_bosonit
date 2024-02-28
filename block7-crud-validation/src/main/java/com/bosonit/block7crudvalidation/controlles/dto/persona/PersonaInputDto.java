@@ -1,4 +1,4 @@
-package com.bosonit.block7crudvalidation.controlles.dto;
+package com.bosonit.block7crudvalidation.controlles.dto.persona;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class PersonaInputDto {
 
-    private int id;
+    private String id_persona;
     private String usuario;
     private String password;
     private String name;

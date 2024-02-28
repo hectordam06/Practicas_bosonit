@@ -1,27 +1,39 @@
 package com.bosonit.block7crudvalidation.services;
 
-import com.bosonit.block7crudvalidation.controlles.dto.PersonaInputDto;
-import com.bosonit.block7crudvalidation.controlles.dto.PersonaOutputDto;
+import com.bosonit.block7crudvalidation.controlles.dto.persona.PersonaInputDto;
+import com.bosonit.block7crudvalidation.controlles.dto.persona.PersonaOutputDto;
+import com.bosonit.block7crudvalidation.controlles.dto.persona.PersonaWithRoleDto;
+import com.bosonit.block7crudvalidation.exceptions.UnprocessableEntityException;
 import com.bosonit.block7crudvalidation.models.Persona;
-import com.bosonit.block7crudvalidation.repositories.PersonaRepositorie;
+import com.bosonit.block7crudvalidation.models.Profesor;
+import com.bosonit.block7crudvalidation.models.Student;
+import com.bosonit.block7crudvalidation.repositories.PersonaRepository;
+import com.bosonit.block7crudvalidation.repositories.ProfesorRepository;
+import com.bosonit.block7crudvalidation.repositories.StudentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class PersonaServiceImpl implements PersonaService{
     @Autowired
-    PersonaRepositorie personaRepositorie;
+    PersonaRepository personaRepositorie;
     @Override
-    public PersonaOutputDto getById(int id) {
-        return personaRepositorie.findById(id).orElseThrow().personatoPersonaOutputDto();
+    public PersonaOutputDto getById(String id) {
+        return personaRepositorie.findById((id)).orElseThrow(EntityNotFoundException::new).personatoPersonaOutputDto();
     }
 
-    @Override
     public PersonaOutputDto getByUsuario(String usuario) {
-        return personaRepositorie.findByUsuario(usuario).personatoPersonaOutputDto();
+        Persona persona = personaRepositorie.findByUsuario(usuario);
+        if (persona == null) {
+            throw new EntityNotFoundException();
+        }
+        return persona.personatoPersonaOutputDto();
     }
 
     @Override
@@ -30,36 +42,96 @@ public class PersonaServiceImpl implements PersonaService{
     }
 
     @Override
-    public void addPersona(PersonaInputDto persona) throws Exception {
-        PersonaInputDto personaValidada = validarPersona(persona);
-        personaRepositorie.save(new Persona(personaValidada));
+    public void addPersona(PersonaInputDto persona) throws UnprocessableEntityException {
+        try {
+            PersonaInputDto personaValidada = validarPersona(persona);
+            personaRepositorie.save(new Persona(personaValidada));
+
+        } catch (Exception e) {
+            throw new UnprocessableEntityException(new Date(), HttpStatus.UNPROCESSABLE_ENTITY.value(), e.getMessage());
+        }
     }
 
     @Override
-    public void updatePersona(int id, PersonaInputDto persona) throws Exception {
+    public void updatePersona(String id, PersonaInputDto persona) throws Exception  {
+try {
+    validarPersona(persona);
+    Persona personaExistente = personaRepositorie.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("No se encontró la persona con el ID: " + id));
 
-        validarPersona(persona);
-        Persona personaExistente = personaRepositorie.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("No se encontró la persona con el ID: " + id));
+    personaExistente.setUsuario(persona.getUsuario());
+    personaExistente.setName(persona.getName());
+    personaExistente.setSurname(persona.getSurname());
+    personaExistente.setCompanyEmail(persona.getCompanyEmail());
+    personaExistente.setPersonalEmail(persona.getPersonalEmail());
+    personaExistente.setCity(persona.getCity());
+    personaExistente.setActive(persona.isActive());
+    personaExistente.setCreatedDate(persona.getCreatedDate());
+    personaExistente.setImageUrl(persona.getImageUrl());
+    personaExistente.setTerminationDate(persona.getTerminationDate());
+
+    personaRepositorie.save(personaExistente);
+
+} catch (UnprocessableEntityException e) {
+    throw new UnprocessableEntityException(new Date(), HttpStatus.UNPROCESSABLE_ENTITY.value(), e.getMessage());
+}
+
+    }
 
 
-        personaExistente.setUsuario(persona.getUsuario());
-        personaExistente.setName(persona.getName());
-        personaExistente.setSurname(persona.getSurname());
-        personaExistente.setCompanyEmail(persona.getCompanyEmail());
-        personaExistente.setPersonalEmail(persona.getPersonalEmail());
-        personaExistente.setCity(persona.getCity());
-        personaExistente.setActive(persona.isActive());
-        personaExistente.setCreatedDate(persona.getCreatedDate());
-        personaExistente.setImageUrl(persona.getImageUrl());
-        personaExistente.setTerminationDate(persona.getTerminationDate());
 
-        personaRepositorie.save(personaExistente);
+
+    @Override
+    public void deletePersona(String id) throws EntityNotFoundException {
+            personaRepositorie.deleteById(id);
+
+    }
+
+
+
+    @Autowired
+    private PersonaRepository personaRepository;
+
+    @Autowired
+    private StudentRepository estudianteRepository;
+
+    @Autowired
+    private ProfesorRepository profesorRepository;
+
+    @Override
+    public PersonaWithRoleDto getByIdWithRole(String id) {
+        Persona persona = personaRepository.findById(id).orElse(null);
+        if (persona != null) {
+            Student estudiante = (Student) estudianteRepository.findByPersonaId(persona.getId());
+            Profesor profesor = (Profesor) profesorRepository.findByPersonaId(persona.getId());
+            return new PersonaWithRoleDto(persona.getIdPersona(), persona.getUsuario(), persona.getName(), persona.getSurname(), persona.getCompanyEmail(), persona.getPersonalEmail(), persona.getCity(), persona.isActive(), persona.getCreatedDate(), persona.getImageUrl(), persona.getTerminationDate(), estudiante != null || profesor != null);
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public void deletePersona(int id) {
-        personaRepositorie.deleteById(id);
+    public PersonaWithRoleDto getByUsuarioWithRole(String usuario) {
+        Persona persona = personaRepository.findByUsuario(usuario);
+        if (persona != null) {
+            Student estudiante = (Student) estudianteRepository.findByPersonaId(persona.getId());
+            Profesor profesor = (Profesor) profesorRepository.findByPersonaId(persona.getId());
+            return new PersonaWithRoleDto(persona.getIdPersona(), persona.getUsuario(), persona.getName(), persona.getSurname(), persona.getCompanyEmail(), persona.getPersonalEmail(), persona.getCity(), persona.isActive(), persona.getCreatedDate(), persona.getImageUrl(), persona.getTerminationDate(), estudiante != null || profesor != null);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public List<PersonaWithRoleDto> getAllWithRole() {
+        List<PersonaWithRoleDto> personasConRoles = new ArrayList<>();
+        List<Persona> personas = personaRepository.findAll();
+        for (Persona persona : personas) {
+            Student estudiante = (Student) estudianteRepository.findByPersonaId(persona.getId());
+            Profesor profesor = (Profesor) profesorRepository.findByPersonaId(persona.getId());
+            personasConRoles.add(new PersonaWithRoleDto(persona.getIdPersona(), persona.getUsuario(), persona.getName(), persona.getSurname(), persona.getCompanyEmail(), persona.getPersonalEmail(), persona.getCity(), persona.isActive(), persona.getCreatedDate(), persona.getImageUrl(), persona.getTerminationDate(), estudiante != null || profesor != null));
+        }
+        return personasConRoles;
     }
 
     PersonaInputDto validarPersona(PersonaInputDto persona)throws Exception{
