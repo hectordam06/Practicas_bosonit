@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/personas")
+@RequestMapping("/person")
+@CrossOrigin(origins = "https://codepen.io")
 public class PersonaController {
 
     @Autowired
