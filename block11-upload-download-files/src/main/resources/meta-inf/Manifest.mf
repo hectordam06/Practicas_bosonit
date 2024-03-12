@@ -1,0 +1,2 @@
+Manifest-Version: 1.0
+Main-Class: com.bosonit.block11uploaddownloadfiles.Block11UploadDownloadFilesApplication
