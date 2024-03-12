@@ -2,14 +2,18 @@ package com.bosonit.block11uploaddownloadfiles.controller;
 
 import com.bosonit.block11uploaddownloadfiles.model.Fichero;
 import com.bosonit.block11uploaddownloadfiles.service.FileStorageService;
+import org.apache.coyote.Response;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.bosonit.block11uploaddownloadfiles.repository.FicheroRepository;
@@ -98,7 +102,7 @@ public class Filecontroller {
     // Endpoint para descargar un archivo por su nombre
     @GetMapping("/downloadByName")
     @Transactional(readOnly = true)
-    public Resource downloadFileByName(String nombre) throws ChangeSetPersister.NotFoundException, FileNotFoundException {
+    public ResponseEntity<Resource> downloadFileByName(@RequestParam String nombre) throws ChangeSetPersister.NotFoundException, FileNotFoundException {
         // Buscar el fichero en la base de datos por su nombre
         Fichero fichero = ficheroRepository.findByName(nombre)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
@@ -111,7 +115,8 @@ public class Filecontroller {
 
         // Verificar si el archivo existe y es legible
         if (resource.exists() && resource.isReadable()) {
-            return resource;
+
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + nombre + "\"").body(resource);
         } else {
             // Lanzar una excepción si el archivo no existe o no se puede leer
             throw new FileNotFoundException("El archivo no existe o no se puede leer");
