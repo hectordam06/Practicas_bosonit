@@ -4,11 +4,16 @@ import com.bosonit.crudrelaciones.application.PersonaServicio;
 import com.bosonit.crudrelaciones.controller.dto.PersonaInputDto;
 import com.bosonit.crudrelaciones.controller.dto.PersonaOutputDto;
 import com.bosonit.crudrelaciones.controller.dto.PersonaRolOutputDto;
+import com.bosonit.crudrelaciones.domain.Persona;
 import com.bosonit.crudrelaciones.exceptions.EntityNotFoundException;
+import com.bosonit.crudrelaciones.repository.PersonaRepository;
+import com.bosonit.crudrelaciones.repository.PersonaRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -18,6 +23,10 @@ public class PersonaController {
 
     @Autowired
     PersonaServicio personaServicio;
+    @Autowired
+    PersonaRepositoryCustom personaRepositoryCustom;
+
+
 
     @PostMapping
     public ResponseEntity<PersonaOutputDto> addPersona(@RequestBody PersonaInputDto personaInputDto)
@@ -70,4 +79,21 @@ public class PersonaController {
 
     }
 
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<PersonaOutputDto>> searchPersonas(
+            @RequestParam(required = false) String user,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String surname,
+            @RequestParam(required = false) Date startDate,
+            @RequestParam(required = false) Date endDate,
+            @RequestParam(required = false, defaultValue = "user") String orderBy,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<Persona> personas = personaRepositoryCustom.searchWithPagination(user, name, surname, startDate, endDate, orderBy, page, size);
+        Page<PersonaOutputDto> personasOutputDto = personas.map(persona -> persona.personaToPersonaOutputDto());
+        return ResponseEntity.ok(personasOutputDto);
+    }
 }
+
