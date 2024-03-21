@@ -1,13 +1,12 @@
 package com.bosonit.block7crud.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
-@AllArgsConstructor
+@Setter
+@Getter
+
 @NoArgsConstructor
 @Table(name = "PERSONA")
 public class Persona {
