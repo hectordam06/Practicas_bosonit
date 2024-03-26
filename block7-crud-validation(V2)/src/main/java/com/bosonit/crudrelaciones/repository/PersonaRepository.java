@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface PersonaRepository extends JpaRepository <Persona, Integer>, PagingAndSortingRepository<Persona, Integer> {
     List<Persona> findByNameLike(String name);
+
+    Persona findByUsuario(String username);
 }
