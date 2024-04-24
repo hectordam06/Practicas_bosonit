@@ -1,6 +1,6 @@
 package com.bosonit.BackWeb_TPV.domain;
-
 import com.bosonit.BackWeb_TPV.controller.dto.AutobusOutputDto;
+import com.virtualtravel.common.Autobus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,14 +17,14 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Autobus {
+public class Autobuss {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String destino;
     private Date fecha;
-    private float hora;
-    private int capacidad ;
+    private double hora;
+    private Integer capacidad ;
 
 
     public AutobusOutputDto autobusToautobusOutputDto(){
@@ -37,6 +37,14 @@ public class Autobus {
         );
 
     }
+    public Autobuss( Autobus autobusTr){
+        this.id=autobusTr.getId();
+        this.fecha= autobusTr.getFecha();
+        this.hora= autobusTr.getHora();
+        this.destino=autobusTr.getDestino();
+        this.capacidad=autobusTr.getCapacidad();
+    }
+
 
     }
 

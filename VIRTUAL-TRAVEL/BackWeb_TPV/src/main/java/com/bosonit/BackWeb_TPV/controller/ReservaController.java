@@ -4,7 +4,7 @@ import com.bosonit.BackWeb_TPV.config.KafkaProducer;
 import com.bosonit.BackWeb_TPV.controller.dto.AutobusOutputDto;
 import com.bosonit.BackWeb_TPV.controller.dto.ReservaInputDto;
 import com.bosonit.BackWeb_TPV.controller.dto.ReservaOutputDto;
-import com.bosonit.BackWeb_TPV.domain.Autobus;
+import com.bosonit.BackWeb_TPV.domain.Autobuss;
 import com.bosonit.BackWeb_TPV.service.AutobusService;
 import com.bosonit.BackWeb_TPV.service.ReservaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class ReservaController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AutobusOutputDto("No se pudo realizar la reserva"));
         }
 
-        Autobus autobus = autobusService.obtenerAutobusPorDestinoFechaHora(reservaOutputDto.getCiudadDestino(), reservaOutputDto.getFecha(), reservaOutputDto.getHora());
+        Autobuss autobus = autobusService.obtenerAutobusPorDestinoFechaHora(reservaOutputDto.getCiudadDestino(), reservaOutputDto.getFecha(), reservaOutputDto.getHora());
         AutobusOutputDto autobusOutputDto = autobusService.actualizarPlazasDisponibles(autobus.getId());
 
         if (autobusOutputDto.getCapacidad() > 0) {
@@ -60,7 +60,7 @@ public class ReservaController {
 
     @DeleteMapping("/eliminar/{id}")
     public void eliminarReserva(@PathVariable Long id) {
-        ReservaOutputDto respuesta = reservaService.eliminarReserva(id);
+     reservaService.eliminarReserva(id);
 
     }
 

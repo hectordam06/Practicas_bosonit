@@ -1,7 +1,7 @@
 package com.bosonit.BackWeb_TPV.service;
 
 import com.bosonit.BackWeb_TPV.controller.dto.AutobusOutputDto;
-import com.bosonit.BackWeb_TPV.domain.Autobus;
+import com.bosonit.BackWeb_TPV.domain.Autobuss;
 import com.bosonit.BackWeb_TPV.repositories.AutobusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,22 +19,22 @@ public class AutobusServiceImpl implements AutobusService {
 
     @Override
     public AutobusOutputDto obtenerAutobusPorId(int id) {
-        Autobus autobus = autobusRepository.findById(id).orElseThrow();
+        Autobuss autobus = autobusRepository.findById(id).orElseThrow();
         return autobus.autobusToautobusOutputDto();
     }
 
     @Override
-    public Long obtenerPlazasDisponibles(String destino, Date fecha, float hora) {
-        return autobusRepository.obtenerPlazasDisponibles(destino, fecha, hora);
+    public Integer obtenerPlazasDisponibles(String destino, Date fecha, float hora) {
+        return autobusRepository.obtenerPlazasDisponibles(destino, fecha, hora).getCapacidad();
     }
 
     @Override
     public AutobusOutputDto actualizarPlazasDisponibles(int id) {
-        Autobus autobus = autobusRepository.findById(id).orElseThrow();
-        int plazas = autobus.getCapacidad();
+        Autobuss autobus = autobusRepository.findById(id).orElseThrow();
+        Integer plazas = (autobus.getCapacidad());
 
         if (plazas > 0) {
-            autobus.setCapacidad(plazas - 1);
+            autobus.setCapacidad( plazas - 1);
             autobusRepository.save(autobus);
 
             // Crear y devolver un objeto AutobusOutputDto con la información actualizada
@@ -55,7 +55,7 @@ public class AutobusServiceImpl implements AutobusService {
 
 
     @Override
-    public Autobus obtenerAutobusPorDestinoFechaHora(String destino, Date fecha, float hora) {
+    public Autobuss obtenerAutobusPorDestinoFechaHora(String destino, Date fecha, float hora) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(fecha);
 

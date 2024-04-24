@@ -1,8 +1,10 @@
 package com.bosonit.BackWeb_TPV.config;
 
-import com.bosonit.BackWeb_TPV.domain.Autobus;
+
+import com.bosonit.BackWeb_TPV.domain.Autobuss;
 import com.bosonit.BackWeb_TPV.repositories.AutobusRepository;
 
+import com.virtualtravel.common.Autobus;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -59,7 +61,8 @@ public class KafkaConsumer {
     @KafkaListener(topics = "Autobuses")
 
     public void listenReservasDisponibles(Autobus autobus) {
-        autobusRepository.save(autobus);
+        System.out.println(autobus);
+        autobusRepository.save(new Autobuss(autobus));
     }
 
 }

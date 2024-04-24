@@ -15,7 +15,7 @@ public interface ReservaService {
 
      List<ReservaOutputDto> buscarReservasExistente(String ciudadDestino, Date fecha, float hora);/*,);*/
 
-    ReservaOutputDto eliminarReserva(Long id) ;
+    void eliminarReserva(Long id) ;
 
     ReservaOutputDto modificarReserva(Long id, ReservaInputDto reservaActualizada) ;}
 

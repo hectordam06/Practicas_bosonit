@@ -1,10 +1,10 @@
 package com.example.backEmpresa.controller;
 
-import com.example.backEmpresa.confing.ProducerConfig;
+import com.example.backEmpresa.confing.KafkaProducerConfig;
 import com.example.backEmpresa.controller.dto.AutobusOutputDto;
 import com.example.backEmpresa.controller.dto.ReservaOutputDto;
 import com.example.backEmpresa.service.AutobusService;
-import org.apache.kafka.clients.producer.KafkaProducer;
+import com.virtualtravel.common.Reserva;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ public class AutobusController {
 @Autowired
  AutobusService autobusService;
 @Autowired
-ProducerConfig producerConfig;
+KafkaProducerConfig producerConfig;
 
 
     @GetMapping("/{id}")
@@ -25,7 +25,7 @@ ProducerConfig producerConfig;
     }
 
     @GetMapping("/plazas-disponibles")
-    public Long obtenerPlazasDisponibles(@RequestParam String destino, @RequestParam Date fecha, @RequestParam float hora) {
+    public Integer obtenerPlazasDisponibles(@RequestParam String destino, @RequestParam Date fecha, @RequestParam float hora) {
         return autobusService.obtenerPlazasDisponibles(destino, fecha, hora);
     }
 
@@ -35,10 +35,14 @@ ProducerConfig producerConfig;
     }
 
     @PostMapping("/reserva")
-    public ResponseEntity<ReservaOutputDto>confirmarReserva(@RequestBody ReservaOutputDto reservaOutputDto){
+    public ResponseEntity<Reserva>confirmarReserva(@RequestBody Reserva reservaOutputDto){
         autobusService.confirmarReserva(reservaOutputDto);
         producerConfig.enviarAutobus();
         return ResponseEntity.ok().body(reservaOutputDto);
     }
+  @PostMapping("/autobus")
+  public void enviarBus (){
+      producerConfig.enviarAutobus();
+   }
 }
 

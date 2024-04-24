@@ -1,10 +1,10 @@
 package com.example.backEmpresa.confing;
 
-import com.example.backEmpresa.controller.dto.AutobusOutputDto;
-import com.example.backEmpresa.domain.Autobus;
+
 import com.example.backEmpresa.repositories.AutobusRepository;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ser.std.StringSerializer;
+
+
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,11 +13,14 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
+import com.virtualtravel.common.Autobus;
+import org.springframework.kafka.support.serializer.JsonSerializer;
+
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class ProducerConfig {
+public class KafkaProducerConfig {
     @Autowired
     AutobusRepository autobusRepository;
     @Value(value = "${spring.kafka.bootstrap-servers}")
@@ -32,7 +35,7 @@ public class ProducerConfig {
                 org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                 StringSerializer.class);
         configProps.put(
-                org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+          org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                 JsonSerializer.class);
         return new DefaultKafkaProducerFactory<>(configProps);
     }
@@ -41,6 +44,8 @@ public class ProducerConfig {
         return new KafkaTemplate<>(reservaOutputDtoProducerFactory());
     }
     public void enviarAutobus(){
-        autobusRepository.findAll().forEach(t -> autobusOutputDtoKafkaTemplate().send("Autobuses",t));
+        autobusRepository.findAll().forEach(t ->{
+            System.out.println(t);autobusOutputDtoKafkaTemplate().send("Autobuses",t.transform());});
+
     }
 }

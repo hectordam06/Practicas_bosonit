@@ -63,14 +63,12 @@ public class ReservaServiceImpl implements ReservaService {
 
 
     @Override
-    public ReservaOutputDto eliminarReserva(Long id) {
-        Optional<Reserva> optionalReserva = reservaRepository.findById(id);
+    public void eliminarReserva(Long id) {
+          reservaRepository.findById(id).orElseThrow();
+          reservaRepository.deleteById(id);
 
-        if (optionalReserva.isPresent()) {
-            reservaRepository.delete(optionalReserva.get());
-            return optionalReserva.get().reservaToReservaOutputDto();
-        }
-        return new ReservaOutputDto("Reserva eliminada correctamente");
+
+
     }
 
     @Override

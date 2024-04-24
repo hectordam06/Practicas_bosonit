@@ -1,7 +1,6 @@
 package com.bosonit.BackWeb_TPV.repositories;
 
 
-import com.bosonit.BackWeb_TPV.domain.Autobus;
 import com.bosonit.BackWeb_TPV.domain.Reserva;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

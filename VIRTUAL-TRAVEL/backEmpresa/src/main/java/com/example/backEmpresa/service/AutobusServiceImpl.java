@@ -5,7 +5,7 @@ import com.example.backEmpresa.controller.dto.ReservaOutputDto;
 import com.example.backEmpresa.domain.Autobus;
 
 import com.example.backEmpresa.repositories.AutobusRepository;
-import com.example.backEmpresa.service.AutobusService;
+import com.virtualtravel.common.Reserva;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Optional;
 
 @Service
 public class AutobusServiceImpl implements AutobusService {
@@ -28,14 +29,14 @@ public class AutobusServiceImpl implements AutobusService {
     }
 
     @Override
-    public Long obtenerPlazasDisponibles(String destino, Date fecha, float hora) {
-        return autobusRepository.obtenerPlazasDisponibles(destino, fecha, hora);
+    public Integer obtenerPlazasDisponibles(String destino, Date fecha, float hora) {
+        return autobusRepository.obtenerPlazasDisponibles(destino, fecha, hora).orElseThrow().getCapacidad();
     }
 
     @Override
     public AutobusOutputDto actualizarPlazasDisponibles(int id) {
         Autobus autobus = autobusRepository.findById(id).orElseThrow();
-        int plazas = autobus.getCapacidad();
+        Integer plazas = autobus.getCapacidad();
 
         if (plazas > 0) {
             autobus.setCapacidad(plazas - 1);
@@ -75,7 +76,7 @@ public class AutobusServiceImpl implements AutobusService {
     }
 
     @Override
-    public void confirmarReserva(ReservaOutputDto reservaOutputDto) {
+    public void confirmarReserva(Reserva reservaOutputDto) {
         Autobus autobus = obtenerAutobusPorDestinoFechaHora(reservaOutputDto.getCiudadDestino(),reservaOutputDto.getFecha(),reservaOutputDto.getHora());
         autobus.setCapacidad(autobus.getCapacidad()-1);
         autobusRepository.save(autobus);

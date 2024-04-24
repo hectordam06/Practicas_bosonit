@@ -10,6 +10,7 @@ public class KafkaConfig {
     @Bean
     public NewTopic topictpv (){
 
+
         return TopicBuilder.name("reservas-topic").partitions(1).build();
     }
 }

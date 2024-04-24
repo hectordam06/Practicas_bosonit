@@ -25,14 +25,14 @@ public class Autobus {
     private String destino;
     private Date fecha;
     private float hora;
-    private int capacidad = 4;
+    private Integer capacidad ;
 
     public Autobus(AutobusInputDto autobus){
         this.id= autobus.getId();
         this.destino=autobus.getDestino();
         this.fecha=autobus.getFecha();
         this.hora=autobus.getHora();
-
+        this.capacidad=autobus.getCapacidad();
 
 
     }
@@ -46,4 +46,13 @@ public class Autobus {
         );
     }
 
+    public com.virtualtravel.common.Autobus transform(){
+        return new com.virtualtravel.common.Autobus(
+                this.id,
+                this.destino,
+                this.fecha,
+                this.hora,
+                this.capacidad
+        );
+    }
 }

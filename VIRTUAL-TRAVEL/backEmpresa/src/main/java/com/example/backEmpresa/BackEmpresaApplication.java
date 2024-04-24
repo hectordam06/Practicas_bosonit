@@ -15,14 +15,18 @@ import java.util.Date;
 public class BackEmpresaApplication implements CommandLineRunner {
 	@Autowired
 	AutobusRepository autobusRepository;
+	//@Autowired
+	//ProducerConfig producerConfig;
 	public static void main(String[] args) {
 		SpringApplication.run(BackEmpresaApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-		AutobusInputDto autobusInputDto = new AutobusInputDto(1,"Barcelona",new Date(2024-1900, Calendar.APRIL,1),14);
+		AutobusInputDto autobusInputDto = new AutobusInputDto(1,"Barcelona",new Date(2024-1900, Calendar.APRIL,1),14,40);
 		autobusRepository.save(new Autobus(autobusInputDto));
+
+		//producerConfig.enviarAutobus();
 	}
 }
 

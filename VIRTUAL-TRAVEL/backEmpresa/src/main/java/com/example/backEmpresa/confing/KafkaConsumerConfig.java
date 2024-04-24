@@ -3,6 +3,7 @@ package com.example.backEmpresa.confing;
 import com.example.backEmpresa.controller.AutobusController;
 import com.example.backEmpresa.controller.dto.ReservaOutputDto;
 
+import com.virtualtravel.common.Reserva;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class ConsumerConfig {
+public class KafkaConsumerConfig {
     @Autowired
     AutobusController autobusController;
     @Value(value = "${spring.kafka.bootstrap-servers}")
@@ -44,19 +45,19 @@ public class ConsumerConfig {
         return props;
     }
     @Bean
-    ConsumerFactory<String, ReservaOutputDto> consumerFactory(){
-        return new DefaultKafkaConsumerFactory<>(consumerConfigs(),  new StringDeserializer(), new JsonDeserializer<>(ReservaOutputDto.class));
+    ConsumerFactory<String, Reserva> consumerFactory(){
+        return new DefaultKafkaConsumerFactory<>(consumerConfigs(),  new StringDeserializer(), new JsonDeserializer<>(Reserva.class));
     }
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ReservaOutputDto> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, ReservaOutputDto> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, Reserva> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Reserva> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
     @KafkaListener(topics = "reservas-topic")
 
-    public void listenReservasDisponibles(ReservaOutputDto reservaOutputDto) {
+    public void listenReservasDisponibles(Reserva reservaOutputDto) {
         autobusController.confirmarReserva(reservaOutputDto);
     }
 

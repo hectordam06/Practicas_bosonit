@@ -17,6 +17,7 @@ public class AutobusInputDto {
     private String destino;
     private Date fecha;
     private float hora;
+    private Integer capacidad;
 
 
 }
